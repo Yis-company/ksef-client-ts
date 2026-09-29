@@ -23,14 +23,16 @@ jobs:
         with:
           node-version: 22
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: bun install --frozen-lockfile
 
       - name: Build
-        run: yarn build
+        run: bun run build
 
       # libxmljs2 is an optional peer dep installed locally for our own XSD
       # tests. Its native binding segfaults Deno; real consumers of the

@@ -50,7 +50,7 @@ async function readBundle(relativePath) {
     return await readFile(absolutePath, "utf8");
   } catch (error) {
     if (error?.code === "ENOENT") {
-      throw new Error(`Missing built bundle: ${relativePath}. Run yarn build first.`);
+      throw new Error(`Missing built bundle: ${relativePath}. Run bun run build first.`);
     }
 
     throw error;

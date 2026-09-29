@@ -4,14 +4,9 @@ dist/
 coverage/
 *.tsbuildinfo
 
-# This project uses yarn 4.x only — never npm
+# This project uses bun (bun.lock) only — never npm or yarn lockfiles
 package-lock.json
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
+yarn.lock
 
 # ignore gitpmoji directory
 .gitpmoji

@@ -16,8 +16,8 @@
 //     exercises the same methods against the real MF cert chain. Ensures
 //     nothing else regresses (HTTP, URL resolution, cert parsing, etc.).
 //
-// Run locally: yarn build && deno task smoke
-// Assumes: yarn install + yarn build have run, and libxmljs2 is absent
+// Run locally: bun run build && deno task smoke
+// Assumes: bun install + bun run build have run, and libxmljs2 is absent
 // from node_modules (its native binding segfaults Deno; CI rms it).
 
 import {

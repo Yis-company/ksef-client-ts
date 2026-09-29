@@ -6,7 +6,7 @@
  *   3. Import/require never throws at module-load time (pdfmake absence surfaces
  *      only when a `render*` function is called).
  *
- * Run after `yarn build`. Exits non-zero on any violation.
+ * Run after `bun run build`. Exits non-zero on any violation.
  */
 import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';

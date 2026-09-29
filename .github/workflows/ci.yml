@@ -31,14 +31,16 @@ jobs:
         with:
           node-version: 22
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: bun install --frozen-lockfile
 
       - name: Lint docs
-        run: yarn lint:md
+        run: bun run lint:md
 
   unit:
     name: Unit Tests (Node ${{ matrix.node-version }})
@@ -56,30 +58,32 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: bun install --frozen-lockfile
 
       # Build before type check: the /node subpath type fixture resolves
       # `ksef-client-ts/node` against the built dist (dist/node.d.ts / .d.cts).
       - name: Build
-        run: yarn build
+        run: bun run build
 
       - name: Type check
-        run: yarn lint
+        run: bun run lint
 
       # Resolves the /node subpath types against the built dist; requires the
-      # Build step above (kept separate from `lint` so a clean `yarn lint`
+      # Build step above (kept separate from `lint` so a clean `bun run lint`
       # needs no prior build).
       - name: Check /node entry types
-        run: yarn check:node-types
+        run: bun run check:node-types
 
       # Proves the ./pdf public types resolve WITHOUT @types/pdfmake in scope —
       # a consumer that has not installed pdfmake still type-checks ./pdf.
       - name: Check /pdf entry types
-        run: yarn check:pdf-types
+        run: bun run check:pdf-types
 
       # Runs on every matrix Node (18/20/22): the ./pdf subpath imports/requires
       # without eagerly loading pdfmake and never throws at module-load time.
@@ -91,17 +95,17 @@ jobs:
       - name: Check package exports (attw + publint)
         if: matrix.node-version == 22
         run: |
-          yarn check:attw
-          yarn check:publint
+          bun run check:attw
+          bun run check:publint
 
       - name: Check fs-free core bundles
         run: node packages/ksef-client-ts/scripts/check-fs-free-core.mjs
 
       - name: Check package exports map
-        run: yarn test:package
+        run: bun run test:package
 
       - name: Run tests with coverage
-        run: yarn test --coverage
+        run: bun run test --coverage
 
       - name: Coverage summary
         if: matrix.node-version == 22 && success()
@@ -146,14 +150,16 @@ jobs:
         with:
           node-version: 22
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: bun install --frozen-lockfile
 
       - name: Build
-        run: yarn build
+        run: bun run build
 
       - name: Run E2E tests
-        run: yarn test:e2e
+        run: bun run test:e2e

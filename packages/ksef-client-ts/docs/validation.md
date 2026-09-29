@@ -50,11 +50,11 @@ BUILD-TIME (one-time setup, output committed to git)
 
   CIRFMF/ksef-docs (GitHub)        Official KSeF XSD schemas
           │
-          │  yarn sync-schemas
+          │  bun run sync-schemas
           ▼
   docs/schemas/**/*.xsd             Local copy of XSD files (FA, PEF, RR)
           │
-          │  yarn generate-schemas
+          │  bun run generate-schemas
           ▼
   src/validation/schemas/*.ts       Zod schemas (6 files + index.ts)
 
@@ -287,9 +287,9 @@ PEF schemas validate the KSeF wrapper structure but not the full UBL body (UBL b
 To regenerate after updating XSD files:
 
 ```bash
-yarn sync-schemas          # download latest XSD from CIRFMF/ksef-docs
-yarn generate-schemas      # regenerate Zod schemas
-yarn lint                  # verify generated code compiles
+bun run sync-schemas       # download latest XSD from CIRFMF/ksef-docs
+bun run generate-schemas   # regenerate Zod schemas
+bun run lint               # verify generated code compiles
 ```
 
 ---

@@ -142,7 +142,7 @@ function writeDerivedInputs(): void {
 describe('35 - `ksef invoice pdf` renders the preview set', () => {
   beforeAll(() => {
     if (!existsSync(cliEntry)) {
-      throw new Error(`Missing ${cliEntry}. Run \`yarn build\` before \`yarn test:e2e\`.`);
+      throw new Error(`Missing ${cliEntry}. Run \`bun run build\` before \`bun run test:e2e\`.`);
     }
     mkdirSync(inputsDir, { recursive: true });
     for (const stale of readdirSync(outDir)) {
