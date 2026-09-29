@@ -53,6 +53,10 @@ const NOT_SENT_ERROR_CODES = new Set([
 
 const NON_IDEMPOTENT_METHODS = new Set(['POST', 'PATCH']);
 
+function isNonIdempotent(method?: string): boolean {
+  return method !== undefined && NON_IDEMPOTENT_METHODS.has(method.toUpperCase());
+}
+
 /**
  * Whether a thrown transport error may be retried.
  *
@@ -66,7 +70,7 @@ export function isRetryableError(error: unknown, policy: RetryPolicy, method?: s
   if (!(error instanceof Error)) return false;
 
   const code = (error as NodeJS.ErrnoException).code;
-  if (method && NON_IDEMPOTENT_METHODS.has(method.toUpperCase())) {
+  if (isNonIdempotent(method)) {
     return code !== undefined && NOT_SENT_ERROR_CODES.has(code);
   }
 
@@ -77,8 +81,17 @@ export function isRetryableError(error: unknown, policy: RetryPolicy, method?: s
   return false;
 }
 
-export function isRetryableStatus(status: number, policy: RetryPolicy): boolean {
-  return policy.retryableStatusCodes.includes(status);
+/**
+ * Whether a response status may be retried.
+ *
+ * For a non-idempotent `method` (POST, PATCH) only `429` qualifies: the server
+ * rejected the request without acting on it. A `5xx` may arrive after the
+ * server already processed the request, so retrying could repeat its effect.
+ * Omitting `method` treats the request as idempotent.
+ */
+export function isRetryableStatus(status: number, policy: RetryPolicy, method?: string): boolean {
+  if (!policy.retryableStatusCodes.includes(status)) return false;
+  return !isNonIdempotent(method) || status === 429;
 }
 
 export function sleep(ms: number): Promise<void> {

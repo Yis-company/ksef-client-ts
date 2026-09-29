@@ -209,6 +209,15 @@ describe('isRetryableStatus', () => {
     expect(isRetryableStatus(409, customPolicy)).toBe(true);
     expect(isRetryableStatus(500, customPolicy)).toBe(false);
   });
+
+  it('for POST, only 429 is a retryable status', () => {
+    expect(isRetryableStatus(429, policy, 'POST')).toBe(true);
+    for (const status of [500, 502, 503, 504]) {
+      expect(isRetryableStatus(status, policy, 'POST')).toBe(false);
+      expect(isRetryableStatus(status, policy, 'GET')).toBe(true);
+      expect(isRetryableStatus(status, policy)).toBe(true);
+    }
+  });
 });
 
 describe('sleep', () => {

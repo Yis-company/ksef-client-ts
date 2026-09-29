@@ -31,7 +31,7 @@ RestClient.sendRequest()
   │   ├── On 401 (first attempt only):
   │   │     └── AuthManager.onUnauthorized() ──► refresh token ──► retry once
   │   │
-  │   ├── On retryable status (429, 5xx):
+  │   ├── On retryable status (429, 5xx; POST: 429 only):
   │   │     ├── Calculate delay (Retry-After or exponential backoff)
   │   │     ├── Sleep
   │   │     ├── Re-acquire rate limit token (429 only)
@@ -194,9 +194,9 @@ function parseRetryAfter(header: string | null): number | null {
 | `UND_ERR_CONNECT_TIMEOUT` | Undici connect timeout |
 | `AbortError` | Fetch timeout (`AbortSignal.timeout`) |
 
-### POST after a network error
+### POST after a 5xx or a network error
 
-POST requests are retried on `429` and `5xx` responses. After a thrown network error or timeout they are retried only when the connection was never established (`ECONNREFUSED`, `UND_ERR_CONNECT_TIMEOUT`). After `ECONNRESET`, `ETIMEDOUT` or `AbortError` the server may already have processed the request, so a retry could repeat its effect (open a second session, generate a second token, or get a duplicate-invoice error for an invoice that was accepted). Those errors are thrown to the caller instead. GET, PUT and DELETE are retried on every listed network error.
+POST requests are retried on a `429` response, because the server rejected them without acting on them. They are not retried on `5xx`, because the server may already have processed a request that ends in `500`, `502`, `503` or `504`. After a thrown network error or timeout they are retried only when the connection was never established (`ECONNREFUSED`, `UND_ERR_CONNECT_TIMEOUT`). After `ECONNRESET`, `ETIMEDOUT` or `AbortError` the server may already have processed the request, so a retry could repeat its effect (open a second session, generate a second token, or get a duplicate-invoice error for an invoice that was accepted). Those errors are thrown to the caller instead. GET, PUT and DELETE are retried on every listed network error.
 
 ---
 

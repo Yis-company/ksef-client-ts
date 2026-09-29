@@ -138,18 +138,17 @@ describe('RestClient', () => {
       expect(transport).toHaveBeenCalledTimes(1);
     });
 
-    it('retries POST requests on 503', async () => {
+    it.each([500, 502, 503, 504])('does not retry POST requests on %i, since the server may have processed them', async (status) => {
       const transport = vi.fn<TransportFn>()
-        .mockResolvedValueOnce(mockResponse(503))
+        .mockResolvedValueOnce(mockResponse(status))
         .mockResolvedValueOnce(mockResponse(200, { created: true }));
 
       const client = createClient(transport);
-      const result = await client.execute<{ created: boolean }>(RestRequest.post('/invoices').body({ xml: '<invoice/>' }));
-
-      expect(result.body).toEqual({ created: true });
-      expect(transport).toHaveBeenCalledTimes(2);
+      await expect(
+        client.execute(RestRequest.post('/invoices').body({ xml: '<invoice/>' })),
+      ).rejects.toThrow(KSeFApiError);
+      expect(transport).toHaveBeenCalledTimes(1);
       expect(transport.mock.calls[0]![1].method).toBe('POST');
-      expect(transport.mock.calls[1]![1].method).toBe('POST');
     });
 
     describe('non-idempotent POST', () => {
