@@ -50,22 +50,24 @@ yarn add ksef-client-ts
 pnpm add ksef-client-ts
 ```
 
-### Install this fork from GitHub Packages
+### Install this fork (`@yis-company/ksef-client-ts`)
 
-The Yis-company fork is published to GitHub Packages as `@yis-company/ksef-client-ts`, not to npmjs.org. Add this to the consuming project's `.npmrc`:
+The Yis-company fork is published to public npmjs.org as `@yis-company/ksef-client-ts`. No token or registry setting is needed:
+
+```bash
+npm i @yis-company/ksef-client-ts@0.13.1-yis.2
+```
+
+To keep importing from `ksef-client-ts`, install it under an alias: `"ksef-client-ts": "npm:@yis-company/ksef-client-ts@0.13.1-yis.2"`.
+
+GitHub Packages carries an optional mirror of the same versions. It requires a token with the `read:packages` scope, even for public packages. To use it, add this to `.npmrc`:
 
 ```ini
 @yis-company:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 ```
 
-`GITHUB_TOKEN` must be a token with the `read:packages` scope (a classic PAT locally; in GitHub Actions, the workflow's `GITHUB_TOKEN` with `packages: read`, once the package grants that repository access). Then install an exact version:
-
-```bash
-npm i @yis-company/ksef-client-ts@0.13.1-yis.1
-```
-
-Yarn 4 ignores `.npmrc`; put the same settings in `.yarnrc.yml`:
+Yarn 4 ignores `.npmrc`; use `npmScopes` in `.yarnrc.yml` instead:
 
 ```yaml
 npmScopes:
