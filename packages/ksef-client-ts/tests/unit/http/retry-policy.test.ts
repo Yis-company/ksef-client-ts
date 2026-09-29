@@ -152,6 +152,27 @@ describe('isRetryableError', () => {
     expect(isRetryableError(undefined, policy)).toBe(false);
   });
 
+  it('for POST, only errors raised before the request was sent are retryable', () => {
+    const code = (c: string) => Object.assign(new Error(c), { code: c });
+    const abortErr = new Error('aborted');
+    abortErr.name = 'AbortError';
+
+    expect(isRetryableError(code('ECONNREFUSED'), policy, 'POST')).toBe(true);
+    expect(isRetryableError(code('UND_ERR_CONNECT_TIMEOUT'), policy, 'POST')).toBe(true);
+    expect(isRetryableError(code('ECONNRESET'), policy, 'POST')).toBe(false);
+    expect(isRetryableError(code('ETIMEDOUT'), policy, 'POST')).toBe(false);
+    expect(isRetryableError(abortErr, policy, 'POST')).toBe(false);
+  });
+
+  it('idempotent methods keep retrying every network error', () => {
+    const abortErr = new Error('aborted');
+    abortErr.name = 'AbortError';
+    for (const method of ['GET', 'PUT', 'DELETE']) {
+      expect(isRetryableError(abortErr, policy, method)).toBe(true);
+      expect(isRetryableError(Object.assign(new Error('x'), { code: 'ECONNRESET' }), policy, method)).toBe(true);
+    }
+  });
+
   it('retryNetworkErrors:false makes all errors non-retryable', () => {
     const noRetryPolicy: RetryPolicy = {
       ...defaultRetryPolicy(),

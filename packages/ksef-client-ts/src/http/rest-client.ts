@@ -216,7 +216,9 @@ export class RestClient {
       } catch (error) {
         lastError = error;
 
-        if (isRetryableError(error, this.retryPolicy) && attempt < this.retryPolicy.maxRetries) {
+        // A non-idempotent request is only retried when it provably never
+        // reached the server (see isRetryableError); 429 is retried above.
+        if (isRetryableError(error, this.retryPolicy, request.method) && attempt < this.retryPolicy.maxRetries) {
           const delayMs = calculateBackoff(attempt, this.retryPolicy);
           consola.debug(`Network error, attempt ${attempt + 1}/${this.retryPolicy.maxRetries}, waiting ${Math.round(delayMs)}ms`);
           await sleep(delayMs);

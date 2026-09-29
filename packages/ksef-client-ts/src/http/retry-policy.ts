@@ -45,13 +45,33 @@ const RETRYABLE_ERROR_CODES = new Set([
   'UND_ERR_CONNECT_TIMEOUT',
 ]);
 
-export function isRetryableError(error: unknown, policy: RetryPolicy): boolean {
+/** Failures raised before any byte of the request reached the server. */
+const NOT_SENT_ERROR_CODES = new Set([
+  'ECONNREFUSED',
+  'UND_ERR_CONNECT_TIMEOUT',
+]);
+
+const NON_IDEMPOTENT_METHODS = new Set(['POST', 'PATCH']);
+
+/**
+ * Whether a thrown transport error may be retried.
+ *
+ * For a non-idempotent `method` (POST, PATCH) only errors raised before the
+ * request was sent qualify: after a timeout or a dropped connection the server
+ * may already have acted on it, and a retry could repeat the side effect.
+ * Omitting `method` treats the request as idempotent.
+ */
+export function isRetryableError(error: unknown, policy: RetryPolicy, method?: string): boolean {
   if (!policy.retryNetworkErrors) return false;
   if (!(error instanceof Error)) return false;
 
+  const code = (error as NodeJS.ErrnoException).code;
+  if (method && NON_IDEMPOTENT_METHODS.has(method.toUpperCase())) {
+    return code !== undefined && NOT_SENT_ERROR_CODES.has(code);
+  }
+
   if (error.name === 'AbortError') return true;
 
-  const code = (error as NodeJS.ErrnoException).code;
   if (code && RETRYABLE_ERROR_CODES.has(code)) return true;
 
   return false;
