@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.13.1-yis.3] - 2026-09-29
+
+### Changed
+
+- **Built with a new toolchain** — the fork is now developed and packaged with bun instead of Yarn, with the same dependency versions; the library still runs on Node.js 18 or later and is otherwise identical to 0.13.1-yis.2.
+
 ## [0.13.1-yis.2] - 2026-09-29
 
 ### Changed
