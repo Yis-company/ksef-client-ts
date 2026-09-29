@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.13.1-yis.2] - 2026-09-29
+
+### Changed
+
+- **Available on the public npm registry** — the fork can now be installed from npmjs.org without a token; GitHub Packages remains as a mirror. No code changes since 0.13.1-yis.1.
+
 ## [0.13.1-yis.1] - 2026-09-29
 
 First release of the Yis-company fork, published to GitHub Packages as `@yis-company/ksef-client-ts`.
