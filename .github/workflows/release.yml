@@ -6,10 +6,12 @@ on:
       - "v*"
   workflow_dispatch:
 
+# Fork (Yis-company): releases publish to GitHub Packages only, as
+# @yis-company/ksef-client-ts. The upstream npmjs.org job was removed — the
+# fork has no npm token and does not own the unscoped `ksef-client-ts` name.
 permissions:
   contents: write
   packages: write
-  id-token: write
 
 jobs:
   github-release:
@@ -64,60 +66,6 @@ jobs:
               --generate-notes
           fi
 
-  publish-npm:
-    needs: github-release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          registry-url: https://registry.npmjs.org
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Verify tag matches package version
-        shell: bash
-        run: |
-          set -euo pipefail
-          TAG_VERSION="${GITHUB_REF_NAME#v}"
-          PKG_VERSION="$(node -p "require('./packages/ksef-client-ts/package.json').version")"
-          if [[ "$TAG_VERSION" != "$PKG_VERSION" ]]; then
-            echo "Tag version ($TAG_VERSION) does not match package.json version ($PKG_VERSION)."
-            exit 1
-          fi
-
-      - name: Install dependencies
-        run: yarn install --immutable
-
-      - name: Validate build
-        # Build first: every guard below reads the built dist. Keep this list in
-        # sync with the guards in ci.yml: a tag can point at a commit that never
-        # went through PR CI, so this is the only gate the published artifact hits.
-        run: |
-          yarn build
-          yarn lint
-          yarn check:node-types
-          yarn check:pdf-types
-          node packages/ksef-client-ts/scripts/check-pdf-cold.mjs
-          yarn check:attw
-          yarn check:publint
-          yarn test
-
-      - name: Publish package
-        working-directory: packages/ksef-client-ts
-        run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          if npm view ksef-client-ts@"$VERSION" version 2>/dev/null; then
-            echo "Version $VERSION already published to npm, skipping"
-            exit 0
-          fi
-          npm publish --access public --provenance
-
   publish-ghpkg:
     needs: github-release
     runs-on: ubuntu-latest
@@ -130,7 +78,7 @@ jobs:
         with:
           node-version: 22
           registry-url: https://npm.pkg.github.com
-          scope: "@flopsstuff"
+          scope: "@yis-company"
 
       - name: Enable Corepack
         run: corepack enable
@@ -165,7 +113,9 @@ jobs:
 
       - name: Prepare scoped package name
         working-directory: packages/ksef-client-ts
-        run: npm pkg set name="@flopsstuff/ksef-client-ts"
+        run: |
+          npm pkg set name="@yis-company/ksef-client-ts"
+          npm pkg set repository.url="git+https://github.com/Yis-company/ksef-client-ts.git"
 
       - name: Publish
         working-directory: packages/ksef-client-ts
@@ -173,8 +123,9 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-          if npm view "@flopsstuff/ksef-client-ts@$VERSION" version --registry https://npm.pkg.github.com 2>/dev/null; then
+          if npm view "@yis-company/ksef-client-ts@$VERSION" version --registry https://npm.pkg.github.com 2>/dev/null; then
             echo "Version $VERSION already published to GitHub Packages, skipping"
             exit 0
           fi
-          npm publish --registry https://npm.pkg.github.com
+          # Explicit dist-tag: prerelease versions such as 0.13.1-yis.1 must name one.
+          npm publish --registry https://npm.pkg.github.com --tag latest
