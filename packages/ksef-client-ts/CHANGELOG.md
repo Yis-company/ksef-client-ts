@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.13.1-yis.1] - 2026-09-29
+
+First release of the Yis-company fork, published to GitHub Packages as `@yis-company/ksef-client-ts`.
+
+### Fixed
+
+- **Incremental export no longer exports the same invoices twice** — each run now stops at the point up to which KSeF guarantees complete data, which is where the next run resumes.
+- **Command-line sessions renew automatically** — logging in now records when the access token expires, so the command line refreshes or re-establishes the session instead of reusing an expired token.
+- **Export downloads no longer hang or fail on a brief outage** — each part download now times out, and temporary server errors, rate limits and connection failures are retried.
+- **Requests that change data are no longer repeated after an uncertain failure** — when a request may already have been processed (a timeout, a dropped connection or a server error), the failure is reported instead of the request being sent again, which avoids duplicate sessions, tokens or invoice errors; rate-limited requests are still retried.
+- **Certificate login on the command line is respected** — a certificate given at login now takes precedence over a saved token, and generated private keys are readable only by their owner.
+
+### Changed
+
+- **Published to GitHub Packages instead of npm** — this fork is released as `@yis-company/ksef-client-ts` on GitHub Packages only.
+
 ## [0.13.0] - 2026-09-11
 
 ### Added
