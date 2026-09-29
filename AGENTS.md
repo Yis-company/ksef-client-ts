@@ -157,7 +157,7 @@ Invoice number (`P_2` in XML) must be unique — resubmitting gives error 440 (D
 
 GitHub Actions workflows in `.github/workflows/` (the `.github/` dir stays at the repo root; build/test steps run root-level `bun run` scripts that delegate to the `ksef-client-ts` workspace):
 - `ci.yml` — markdown lint + unit + E2E tests on Node 18/20/22 matrix, coverage badge via gist (coverage JSON read from `packages/ksef-client-ts/coverage/`)
-- `release.yml` — on tag `v*`: create GitHub Release (from `packages/ksef-client-ts/CHANGELOG.md`), then publish `@yis-company/ksef-client-ts` to npmjs.org and GitHub Packages in parallel
+- `release.yml` — on tag `v*`: create GitHub Release (from `packages/ksef-client-ts/CHANGELOG.md`), then publish `@yis-company/ksef-client-ts` to npmjs.org (npm Trusted Publishing via OIDC — no npm token or secret) and GitHub Packages in parallel
 - `deploy-docs.yml` — VitePress → GitHub Pages (artifact from `packages/ksef-client-ts/docs/.vitepress/dist`)
 - `deno-smoke.yml` — Deno runtime smoke test (`deno task smoke`, run in the package dir)
 

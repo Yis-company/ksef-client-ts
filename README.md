@@ -60,6 +60,8 @@ npm i @yis-company/ksef-client-ts@0.13.1-yis.2
 
 To keep importing from `ksef-client-ts`, install it under an alias: `"ksef-client-ts": "npm:@yis-company/ksef-client-ts@0.13.1-yis.2"`.
 
+Maintainers release by pushing a `v*` tag that matches the package version. The Release workflow then publishes to npmjs.org through [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers) (OIDC, with provenance), so no npm token or secret is involved.
+
 GitHub Packages carries an optional mirror of the same versions. It requires a token with the `read:packages` scope, even for public packages. To use it, add this to `.npmrc`:
 
 ```ini
