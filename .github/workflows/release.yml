@@ -7,8 +7,10 @@ on:
   workflow_dispatch:
 
 # Fork (Yis-company): releases publish @yis-company/ksef-client-ts to public
-# npmjs.org (primary, NPM_TOKEN secret) and to GitHub Packages (mirror).
-# id-token: write lets npm sign provenance for the npmjs.org publish.
+# npmjs.org (primary, via npm Trusted Publishing / OIDC — no npm token) and to
+# GitHub Packages (mirror). id-token: write lets publish-npm obtain the OIDC
+# token npm exchanges for a short-lived publish credential; npm then also
+# generates provenance automatically.
 permissions:
   contents: write
   packages: write
@@ -143,10 +145,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          # npm 11 (Node 24) for --provenance on a scoped public package.
-          node-version: 24
-          registry-url: https://registry.npmjs.org
-          scope: "@yis-company"
+          # Trusted publishing needs Node >= 22.14.0 and npm >= 11.5.1
+          # (https://docs.npmjs.com/trusted-publishers). Build on Node 22 like
+          # the other jobs; npm is upgraded below. No registry-url: that would
+          # write an .npmrc expecting NODE_AUTH_TOKEN, and OIDC needs no token.
+          node-version: 22
+
+      - name: Upgrade npm for trusted publishing
+        run: |
+          npm install -g npm@11.20.0
+          npm --version
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -189,8 +197,9 @@ jobs:
 
       - name: Publish
         working-directory: packages/ksef-client-ts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # Authenticates via npm Trusted Publishing (OIDC): npmjs.org trusts
+        # Yis-company/ksef-client-ts + .github/workflows/release.yml, so no
+        # token is configured. Provenance is generated automatically.
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           if npm view "@yis-company/ksef-client-ts@$VERSION" version --registry https://registry.npmjs.org 2>/dev/null; then
@@ -198,4 +207,4 @@ jobs:
             exit 0
           fi
           # Explicit dist-tag: prerelease versions such as 0.13.1-yis.1 must name one.
-          npm publish --registry https://registry.npmjs.org --access public --provenance --tag latest
+          npm publish --registry https://registry.npmjs.org --access public --tag latest
