@@ -10,7 +10,7 @@
  * Source: https://api-test.ksef.mf.gov.pl/docs/v2/openapi.json
  * Target: docs/open-api.json
  *
- * Run `yarn split-openapi` afterwards to regenerate docs/openapi-chunks/.
+ * Run `bun run split-openapi` afterwards to regenerate docs/openapi-chunks/.
  *
  * Usage: node scripts/sync-openapi.mjs [--env test|demo|prod] [--dry-run]
  */
@@ -121,7 +121,7 @@ async function main() {
     throw err;
   }
 
-  console.log("\nDone. Run `yarn split-openapi` to regenerate docs/openapi-chunks/.");
+  console.log("\nDone. Run `bun run split-openapi` to regenerate docs/openapi-chunks/.");
 }
 
 main().catch((err) => {

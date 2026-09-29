@@ -1,6 +1,6 @@
 // @ts-nocheck
 // Generated from KSeF XSD schema — do not edit manually
-// Run: yarn generate-schemas
+// Run: bun run generate-schemas
 import { z } from 'zod';
 
 const CreditNoteType = z.object({

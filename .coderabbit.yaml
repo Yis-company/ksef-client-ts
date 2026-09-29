@@ -15,7 +15,6 @@ reviews:
     - "!docs/openapi-chunks/**"
     - "!docs/schemas/**"
     - "!**/*.lock"
-    - "!.yarn/**"
     # OpenSpec artifacts are generated/validated by the OpenSpec CLI (canonical
     # specs use `## Purpose`/`## Requirements`, deltas use `## ADDED Requirements`);
     # generic markdown linting produces false positives against that format.

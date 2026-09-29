@@ -12,10 +12,10 @@ All tests use **vitest** and live in the `tests/` directory:
 ## Running
 
 ```bash
-yarn test                # Unit tests (tests/unit)
-yarn test:watch          # Unit tests in watch mode
-yarn test:e2e            # E2E tests (tests/e2e)
-yarn vitest run tests/unit/services/auth.test.ts   # Single file
+bun run test             # Unit tests (tests/unit)
+bun run test:watch       # Unit tests in watch mode
+bun run test:e2e         # E2E tests (tests/e2e)
+bun run vitest run tests/unit/services/auth.test.ts   # Single file
 ```
 
 ---
@@ -114,7 +114,7 @@ This means tests can run on any machine, any CI, without configuring credentials
 
 ### The PDF Specs (35, 36)
 
-Both are exceptions to everything above: they authenticate against nothing and reach the network at no point — a render reads a local document and writes bytes. They need `yarn build` first, because 35 drives the built CLI (`dist/cli.js`) and 36 imports the built package.
+Both are exceptions to everything above: they authenticate against nothing and reach the network at no point — a render reads a local document and writes bytes. They need `bun run build` first, because 35 drives the built CLI (`dist/cli.js`) and 36 imports the built package.
 
 They also leave something behind on purpose. Each writes a numbered set of PDFs into `.pdf-preview/` (override with `KSEF_PDF_OUT`), distinguished by a `cli-`/`lib-` prefix, so the pages can be opened and judged by eye after a run. The assertions themselves are deliberately shallow — a file appears and is a structurally complete PDF — because asserting on glyph positions breaks on every deliberate design change while saying nothing about whether the page reads well. What they do catch is the class of failure unit tests cannot see: a template that stops validating at import, a bundling regression that drops the fonts, a flag that stops being wired, an optional peer that fails to load.
 

@@ -461,7 +461,7 @@ class ZodEmitter {
 
     this.emit(`// @ts-nocheck`);
     this.emit(`// Generated from KSeF XSD schema — do not edit manually`);
-    this.emit(`// Run: yarn generate-schemas`);
+    this.emit(`// Run: bun run generate-schemas`);
     this.emit(`import { z } from 'zod';`);
     this.emit('');
 
@@ -1110,7 +1110,7 @@ function generate() {
 function generateIndex(namespaces) {
   const lines = [
     '// Generated barrel — do not edit manually',
-    "// Run: yarn generate-schemas",
+    "// Run: bun run generate-schemas",
     '',
   ];
 

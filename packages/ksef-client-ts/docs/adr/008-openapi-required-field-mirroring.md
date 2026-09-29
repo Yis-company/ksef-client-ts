@@ -30,5 +30,5 @@ This is not a one-off. Upstream will add required fields to existing schemas aga
 - Callers constructing an affected request type as an object literal get a compile error and must supply the new property. Callers who only read the response type are unaffected.
 - Callers who pass request bodies as untyped JSON — including the CLI, which takes rate limits as a JSON string — do not break at compile time and must be told through the CHANGELOG and the CLI docs.
 - Refreshing the vendored spec is part of the same change, not a follow-up: `docs/open-api.json`, the generated chunks, and the spec-version references in the docs move together, so the vendored spec never disagrees with the types.
-- New paths and schemas that arrive in the same upstream release are *not* covered by this ADR. They are new surface, tracked and implemented separately, and `yarn check-api` is expected to report them as uncovered until then.
+- New paths and schemas that arrive in the same upstream release are *not* covered by this ADR. They are new surface, tracked and implemented separately, and `bun run check-api` is expected to report them as uncovered until then.
 - 0.x versioning permits this in a minor release. After 1.0 the same change belongs in a major release, with the CHANGELOG calling it out as breaking.

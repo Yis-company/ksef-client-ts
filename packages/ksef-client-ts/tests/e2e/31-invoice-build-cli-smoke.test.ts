@@ -31,7 +31,7 @@ describe('31 - `ksef invoice build` CLI smoke', () => {
   beforeAll(() => {
     if (!existsSync(cliEntry)) {
       throw new Error(
-        `Missing ${cliEntry}. Run \`yarn build\` before \`yarn test:e2e\`.`,
+        `Missing ${cliEntry}. Run \`bun run build\` before \`bun run test:e2e\`.`,
       );
     }
   });

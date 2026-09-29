@@ -81,7 +81,7 @@ For local development, clone and build:
 ```bash
 git clone https://github.com/Flopsstuff/ksef-client-ts.git
 cd ksef-client-ts
-yarn install && yarn build
+bun install && bun run build
 ```
 
 ```ts
@@ -114,7 +114,7 @@ See the [documentation](https://flopsstuff.github.io/ksef-client-ts) for full us
 
 ## Repository layout
 
-This repository is a Yarn 4.x workspace monorepo. The library and CLI live in the `ksef-client-ts` workspace; root-level `yarn` commands delegate to it.
+This repository is a workspace monorepo managed with [bun](https://bun.com) (package manager only; the code runs on Node.js). The library and CLI live in the `ksef-client-ts` workspace; root-level `bun run` commands delegate to it.
 
 | Package | Description |
 |---------|-------------|
@@ -125,14 +125,14 @@ This repository is a Yarn 4.x workspace monorepo. The library and CLI live in th
 Run these from the repo root (they delegate to the `ksef-client-ts` workspace):
 
 ```bash
-yarn install      # Install dependencies (yarn 4.x via Corepack)
-yarn build        # Build ESM + CJS + DTS via tsup
-yarn lint         # Type-check (tsc --noEmit)
-yarn test         # Run unit tests
-yarn test:e2e     # Run E2E tests
-yarn lint:md      # Lint Markdown docs
-yarn docs:dev     # VitePress docs dev server
-yarn check-api    # OpenAPI coverage check
+bun install       # Install dependencies (bun; scripts run on Node.js)
+bun run build     # Build ESM + CJS + DTS via tsup
+bun run lint      # Type-check (tsc --noEmit)
+bun run test      # Run unit tests
+bun run test:e2e  # Run E2E tests
+bun run lint:md   # Lint Markdown docs
+bun run docs:dev  # VitePress docs dev server
+bun run check-api # OpenAPI coverage check
 ```
 
 ## Related

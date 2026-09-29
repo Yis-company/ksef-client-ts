@@ -126,7 +126,7 @@ function rewriteSchemaLocations(xsdContent: string): string {
   if (rewritten === xsdContent) {
     throw new Error(
       'FA XSD schemaLocation rewrite produced no replacement despite URL being present; ' +
-        'regex likely out of sync with docs/schemas/FA/. Re-check after `yarn sync-schemas`.',
+        'regex likely out of sync with docs/schemas/FA/. Re-check after `bun run sync-schemas`.',
     );
   }
   return rewritten;

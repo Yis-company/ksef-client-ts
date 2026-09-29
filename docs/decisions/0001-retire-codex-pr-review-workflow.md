@@ -31,6 +31,6 @@ Automated review coverage does not depend on the answer. CodeRabbit runs on ever
 
 - Pull requests get one automated reviewer (CodeRabbit) plus human review. The `codex-review` check disappears from the checks list.
 - Nothing becomes unmergeable: `main` requires only `deletion`, `non_fast_forward`, `required_linear_history`, and `required_deployments` — `codex-review` was never a required check.
-- `.github/codex/prompts/review.md` stays. `yarn codex-review --ci-prompt` reads it, and that script is a manual local review run through the Codex CLI on a developer's own subscription — it never depended on the repository secret and keeps working. The flag now means "the standing review rubric" rather than "what CI runs".
+- `.github/codex/prompts/review.md` stays. `bun run codex-review --ci-prompt` reads it, and that script is a manual local review run through the Codex CLI on a developer's own subscription — it never depended on the repository secret and keeps working. The flag now means "the standing review rubric" rather than "what CI runs".
 - Restoring the channel means re-adding the workflow and the secret. The full workflow, including the fixed guard, stays in git history.
 - CodeRabbit is now the only automated reviewer. If it is ever disabled, bot coverage drops to zero — that has to be a deliberate call, not something discovered later from a quiet pull request.

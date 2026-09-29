@@ -5,11 +5,11 @@
 // runs read-only, prints the review, and saves it under plans/reviews/.
 //
 // Usage:
-//   yarn codex-review                 # review current branch vs origin/main
-//   yarn codex-review --worktree      # review uncommitted changes (incl. staged)
-//   yarn codex-review --staged        # review only staged changes
-//   yarn codex-review <path> [path…]  # review specific files/dirs
-//   yarn codex-review --ci-prompt     # use .github/codex/prompts/review.md verbatim
+//   bun run codex-review              # review current branch vs origin/main
+//   bun run codex-review --worktree      # review uncommitted changes (incl. staged)
+//   bun run codex-review --staged        # review only staged changes
+//   bun run codex-review <path> [path…]  # review specific files/dirs
+//   bun run codex-review --ci-prompt     # use .github/codex/prompts/review.md verbatim
 //
 // Env:
 //   CODEX_MODEL=gpt-5-codex   # pick a model (default: CLI default)

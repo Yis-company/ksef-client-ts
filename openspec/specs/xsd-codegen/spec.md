@@ -70,12 +70,12 @@ The generator MUST produce one TypeScript file per schema type in `src/validatio
 - **THEN** it also exports `type FA3 = z.infer<typeof FA3Schema>`
 
 ### Requirement: Generator CLI invocation
-The generator MUST be runnable via `yarn generate-schemas` and accept no required arguments (uses `docs/schemas/` as default input, `src/validation/schemas/` as default output).
+The generator MUST be runnable via `bun run generate-schemas` and accept no required arguments (uses `docs/schemas/` as default input, `src/validation/schemas/` as default output).
 
 #### Scenario: Run generator
-- **WHEN** user runs `yarn generate-schemas`
+- **WHEN** user runs `bun run generate-schemas`
 - **THEN** the script reads XSD files from `docs/schemas/`, generates Zod schema files to `src/validation/schemas/`, and reports the count of generated files
 
 #### Scenario: CI freshness check
-- **WHEN** CI runs `yarn generate-schemas && git diff --exit-code src/validation/schemas/`
+- **WHEN** CI runs `bun run generate-schemas && git diff --exit-code src/validation/schemas/`
 - **THEN** the command exits 0 if generated files match committed files, non-zero if they differ

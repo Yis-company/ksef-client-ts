@@ -81,8 +81,10 @@ jobs:
           registry-url: https://npm.pkg.github.com
           scope: "@yis-company"
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
 
       - name: Verify tag matches package version
         shell: bash
@@ -96,21 +98,21 @@ jobs:
           fi
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: bun install --frozen-lockfile
 
       - name: Validate build
         # Build first: every guard below reads the built dist. Keep this list in
         # sync with the guards in ci.yml: a tag can point at a commit that never
         # went through PR CI, so this is the only gate the published artifact hits.
         run: |
-          yarn build
-          yarn lint
-          yarn check:node-types
-          yarn check:pdf-types
+          bun run build
+          bun run lint
+          bun run check:node-types
+          bun run check:pdf-types
           node packages/ksef-client-ts/scripts/check-pdf-cold.mjs
-          yarn check:attw
-          yarn check:publint
-          yarn test
+          bun run check:attw
+          bun run check:publint
+          bun run test
 
       - name: Prepare scoped package name
         working-directory: packages/ksef-client-ts
@@ -146,8 +148,10 @@ jobs:
           registry-url: https://registry.npmjs.org
           scope: "@yis-company"
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
 
       - name: Verify tag matches package version
         shell: bash
@@ -161,21 +165,21 @@ jobs:
           fi
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: bun install --frozen-lockfile
 
       - name: Validate build
         # Build first: every guard below reads the built dist. Keep this list in
         # sync with the guards in ci.yml: a tag can point at a commit that never
         # went through PR CI, so this is the only gate the published artifact hits.
         run: |
-          yarn build
-          yarn lint
-          yarn check:node-types
-          yarn check:pdf-types
+          bun run build
+          bun run lint
+          bun run check:node-types
+          bun run check:pdf-types
           node packages/ksef-client-ts/scripts/check-pdf-cold.mjs
-          yarn check:attw
-          yarn check:publint
-          yarn test
+          bun run check:attw
+          bun run check:publint
+          bun run test
 
       - name: Prepare scoped package name
         working-directory: packages/ksef-client-ts

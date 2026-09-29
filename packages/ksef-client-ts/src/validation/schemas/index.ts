@@ -1,5 +1,5 @@
 // Generated barrel — do not edit manually
-// Run: yarn generate-schemas
+// Run: bun run generate-schemas
 
 export { FA3Schema, type FA3 } from './fa3.js';
 export { FA2Schema, type FA2 } from './fa2.js';

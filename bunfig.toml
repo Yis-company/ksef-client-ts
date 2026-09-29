@@ -1,0 +1,4 @@
+[install]
+# Flat node_modules like Yarn's `nodeLinker: node-modules`, not bun's isolated
+# workspace layout: tools such as vitepress and attw expect hoisted packages.
+linker = "hoisted"
