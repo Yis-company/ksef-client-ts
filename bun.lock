@@ -5,7 +5,7 @@
     "": {},
     "packages/ksef-client-ts": {
       "name": "ksef-client-ts",
-      "version": "0.13.1-yis.3",
+      "version": "0.13.1-yis.4",
       "bin": {
         "ksef": "dist/cli.js",
       },

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.13.1-yis.4] - 2026-09-30
+
+### Fixed
+
+- **Exporting a period with no invoices no longer fails** — when invoices are exported and unpacked in one step, an export that contains no invoices now returns an empty result, with its continuation point intact, instead of an error.
+
 ## [0.13.1-yis.3] - 2026-09-29
 
 ### Changed
