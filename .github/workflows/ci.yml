@@ -29,12 +29,12 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: 22.23.4
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.4.0
+          bun-version: 1.4.4
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -48,7 +48,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18, 20, 22]
+        node-version: [22.23.4, 24.22.1, 26.12.1]
     steps:
       - uses: actions/checkout@v7
         with:
@@ -61,7 +61,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.4.0
+          bun-version: 1.4.4
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -85,7 +85,7 @@ jobs:
       - name: Check /pdf entry types
         run: bun run check:pdf-types
 
-      # Runs on every matrix Node (18/20/22): the ./pdf subpath imports/requires
+      # Runs on every matrix Node (22/24/26): the ./pdf subpath imports/requires
       # without eagerly loading pdfmake and never throws at module-load time.
       - name: Check /pdf cold subpath
         run: node packages/ksef-client-ts/scripts/check-pdf-cold.mjs
@@ -93,7 +93,7 @@ jobs:
       # Publish-correctness of the package exports (incl. the new ./pdf subpath).
       # Runs once — the built dist is identical across the matrix.
       - name: Check package exports (attw + publint)
-        if: matrix.node-version == 22
+        if: matrix.node-version == '22.23.4'
         run: |
           bun run check:attw
           bun run check:publint
@@ -108,7 +108,7 @@ jobs:
         run: bun run test --coverage
 
       - name: Coverage summary
-        if: matrix.node-version == 22 && success()
+        if: matrix.node-version == '22.23.4' && success()
         run: |
           node -e "
           const r = require('./packages/ksef-client-ts/coverage/coverage-summary.json').total;
@@ -127,7 +127,7 @@ jobs:
           "
 
       - name: Update coverage badge
-        if: matrix.node-version == 22 && github.ref == 'refs/heads/main' && success()
+        if: matrix.node-version == '22.23.4' && github.ref == 'refs/heads/main' && success()
         run: |
           COVERAGE=$(node -e "console.log(require('./packages/ksef-client-ts/coverage/coverage-summary.json').total.lines.pct)")
           COLOR=$([[ $(echo "$COVERAGE >= 80" | bc) == 1 ]] && echo "brightgreen" || ([[ $(echo "$COVERAGE >= 60" | bc) == 1 ]] && echo "yellow" || echo "red"))
@@ -148,12 +148,12 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: 22.23.4
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.4.0
+          bun-version: 1.4.4
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
