@@ -30,7 +30,7 @@ Tests live in `packages/ksef-client-ts/tests/**/*.test.ts` (vitest, globals enab
 
 E2E specs drive the **live KSeF TEST API** (`environment: 'TEST'`, creds from `KSEF_TEST_TOKEN`/`KSEF_TEST_NIP`) — never DEMO or PROD. The PDF specs (35, 36) are the exception: no network at all, they render locally into `.pdf-preview/` (override with `KSEF_PDF_OUT`) and need `bun run build` first; `--env test` there only picks the host printed in the QR link, so keep it on TEST like everything else.
 
-**Package manager is bun** (`bun.lock`, CI pins bun 1.4.0). Do not use npm or yarn to install. `bunfig.toml` sets `linker = "hoisted"` (flat `node_modules`, like the previous Yarn `nodeLinker: node-modules`). Build, tests and the CLI still run on **Node.js**: `bun run <script>` executes tools such as vitest and tsup through their `#!/usr/bin/env node` shebangs, so never add `--bun` to those scripts. Publishing stays `npm publish`.
+**Package manager is bun** (`bun.lock`, CI pins bun 1.4.4). Do not use npm or yarn to install. `bunfig.toml` sets `linker = "hoisted"` (flat `node_modules`, like the previous Yarn `nodeLinker: node-modules`). Build, tests and the CLI still run on **Node.js**: `bun run <script>` executes tools such as vitest and tsup through their `#!/usr/bin/env node` shebangs, so never add `--bun` to those scripts. Publishing stays `npm publish`.
 
 ## Architecture
 
@@ -156,7 +156,7 @@ Invoice number (`P_2` in XML) must be unique — resubmitting gives error 440 (D
 ### CI/CD
 
 GitHub Actions workflows in `.github/workflows/` (the `.github/` dir stays at the repo root; build/test steps run root-level `bun run` scripts that delegate to the `ksef-client-ts` workspace):
-- `ci.yml` — markdown lint + unit + E2E tests on Node 18/20/22 matrix, coverage badge via gist (coverage JSON read from `packages/ksef-client-ts/coverage/`)
+- `ci.yml` — markdown lint + unit + E2E tests on Node 22/24 matrix, coverage badge via gist (coverage JSON read from `packages/ksef-client-ts/coverage/`)
 - `release.yml` — on tag `v*`: create GitHub Release (from `packages/ksef-client-ts/CHANGELOG.md`), then publish `@yis-company/ksef-client-ts` to npmjs.org (npm Trusted Publishing via OIDC — no npm token or secret) and GitHub Packages in parallel
 - `deploy-docs.yml` — VitePress → GitHub Pages (artifact from `packages/ksef-client-ts/docs/.vitepress/dist`)
 - `deno-smoke.yml` — Deno runtime smoke test (`deno task smoke`, run in the package dir)

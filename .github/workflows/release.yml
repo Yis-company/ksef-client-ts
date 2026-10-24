@@ -79,14 +79,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: 22.23.4
           registry-url: https://npm.pkg.github.com
           scope: "@yis-company"
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.4.0
+          bun-version: 1.4.4
 
       - name: Verify tag matches package version
         shell: bash
@@ -149,7 +149,7 @@ jobs:
           # (https://docs.npmjs.com/trusted-publishers). Build on Node 22 like
           # the other jobs; npm is upgraded below. No registry-url: that would
           # write an .npmrc expecting NODE_AUTH_TOKEN, and OIDC needs no token.
-          node-version: 22
+          node-version: 22.23.4
 
       - name: Upgrade npm for trusted publishing
         run: |
@@ -159,7 +159,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.4.0
+          bun-version: 1.4.4
 
       - name: Verify tag matches package version
         shell: bash
